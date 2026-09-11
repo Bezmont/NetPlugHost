@@ -1,0 +1,31 @@
+<!--
+  Lays Vst3HostNative.dll down next to the managed output (ABI_SPEC.md §1, Packaging),
+  so an x64 consumer finds it by default DLL probing.
+
+  Imported by both NetPlugHost.csproj and any project that consumes it. A ProjectReference
+  does not carry loose native files into the referencing project's output directory, so
+  each project that needs the DLL beside its own binary imports this explicitly.
+
+  For a real NuGet package the equivalent is a runtimes/win-x64/native/ folder, which the
+  restore pipeline handles automatically; this file is the "copy these files" v1 the spec
+  accepts in its place.
+-->
+<Project>
+
+  <PropertyGroup>
+    <NativeDllPath Condition="'$(NativeDllPath)' == ''">$(MSBuildThisFileDirectory)native\build\bin\Vst3HostNative.dll</NativeDllPath>
+  </PropertyGroup>
+
+  <Target Name="CopyVst3HostNative" AfterTargets="Build" Condition="Exists('$(NativeDllPath)')">
+    <Copy SourceFiles="$(NativeDllPath)"
+          DestinationFolder="$(OutDir)"
+          SkipUnchangedFiles="true" />
+  </Target>
+
+  <!-- Shipping a managed assembly whose native half is missing turns a build problem into
+       a DllNotFoundException at first call. Fail loudly at build time instead. -->
+  <Target Name="WarnOnMissingVst3HostNative" BeforeTargets="Build" Condition="!Exists('$(NativeDllPath)')">
+    <Warning Text="Vst3HostNative.dll not found at $(NativeDllPath). Build it first: cmake -S native -B native/build -A x64 &amp;&amp; cmake --build native/build --config Release" />
+  </Target>
+
+</Project>

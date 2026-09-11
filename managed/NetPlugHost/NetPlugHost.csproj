@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- ABI_SPEC.md §1.2: net9.0-windows, x64. The native DLL has no x86 build. -->
+    <TargetFramework>net9.0-windows</TargetFramework>
+    <!-- PlatformTarget (not Platforms) pins codegen to x64. Declaring <Platforms>x64</Platforms>
+         would leave the solution's "Any CPU" configuration with nothing to map to, and MSBuild
+         then skips the project while still reporting "Build succeeded". -->
+    <PlatformTarget>x64</PlatformTarget>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AppendTargetFrameworkToOutputPath>true</AppendTargetFrameworkToOutputPath>
+
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <AssemblyName>NetPlugHost</AssemblyName>
+    <RootNamespace>NetPlugHost</RootNamespace>
+    <Description>Managed wrapper over Vst3HostNative.dll (VST3 hosting). ABI v1.</Description>
+  </PropertyGroup>
+
+  <!-- §1 Packaging: lay Vst3HostNative.dll down next to the managed assembly. -->
+  <Import Project="$(MSBuildThisFileDirectory)..\..\NetPlugHost.Native.targets" />
+
+</Project>

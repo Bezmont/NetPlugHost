@@ -1,0 +1,19 @@
+# Build output
+bin/
+obj/
+build/
+native/build/
+tests/fixture/build/
+
+# The VST3 SDK is a submodule (ABI_SPEC.md §10) — never commit its contents.
+# (The submodule pointer itself lives in .gitmodules and is tracked.)
+
+# Visual Studio / Rider / VS Code
+.vs/
+.idea/
+.vscode/
+*.user
+*.suo
+
+# Test output
+TestResults/
