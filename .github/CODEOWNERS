@@ -1,0 +1,4 @@
+# Pull requests into main need an approval from someone listed here (see the "main" ruleset in
+# Settings -> Rules). To let someone else approve: add them as a collaborator, then add them below,
+# e.g.  * @Bezmont @their-name
+* @Bezmont
